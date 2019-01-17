@@ -8,7 +8,7 @@ import { PrefixTree } from "./prefixSearch";
 
 const browserPromise: Promise<puppeteer.Browser> = puppeteer.launch();
 
-const urls: {
+let urls: {
   [k: string]: {
     content: string;
     description: string;
@@ -23,6 +23,43 @@ function processText(str: string): string {
 
 function getAllTextNodes(root: Cheerio) {
   return root.text();
+}
+
+async function save() {
+  return new Promise<boolean>((resolve, reject) => {
+    fs.writeFile(getDataPath(), JSON.stringify({ urls }), err => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+function getDataPath() {
+  return path.join(path.resolve(__dirname), "..", "data.json");
+}
+
+export async function load() {
+  const urlData = JSON.parse(
+    await new Promise<string>((resolve, reject) => {
+      fs.readFile(getDataPath(), (err, data) => {
+        if (err) {
+          if (err.code === "ENOENT") {
+            resolve(JSON.stringify({ urls: {} }));
+            return;
+          }
+          reject(err);
+          return;
+        }
+        resolve(data.toString());
+      });
+    })
+  ).urls;
+
+  Object.keys(urlData).forEach(d => indexContent(urlData[d].content));
+  urls = urlData;
 }
 
 async function sleep(ms: number) {
@@ -130,8 +167,9 @@ export async function addOrSetUrl(
       description: Boolean(description) ? description : ""
     };
 
-    const words = text.split(" ");
-    words.forEach(word => prefixTree.add(word));
+    indexContent(text);
+
+    await save();
   } catch (e) {
     console.error(e);
     return {
@@ -167,12 +205,17 @@ interface IQueryResult {
   url: string;
 }
 
+function indexContent(text: string) {
+  const words = text.split(" ");
+  words.forEach(word => prefixTree.add(word));
+}
+
 export async function search(
   query: string,
   start: number,
   max: number
-): Promise<IQueryResult[]> {
-  const delay = Math.random() * 3000 + 1000;
+): Promise<{ hasMore: boolean; query: string; results: IQueryResult[] }> {
+  const delay = Math.random() * 3000 + 500;
   await sleep(delay);
 
   let numFound = 0;
@@ -184,10 +227,6 @@ export async function search(
 
     let searchIndex: number = 0;
     while (true) {
-      if (results.length >= max) {
-        return;
-      }
-
       searchIndex = content.indexOf(query, searchIndex);
       if (searchIndex === -1) {
         break;
@@ -208,7 +247,11 @@ export async function search(
     }
   });
 
-  return results;
+  return {
+    hasMore: results.length > max,
+    query,
+    results: results.slice(0, max)
+  };
 }
 
 export async function autocomplete(query: string) {

@@ -1,3 +1,7 @@
 build
 cached
 node_modules
+data.json
+frontend
+screenshots
+.DS_Store

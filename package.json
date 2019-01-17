@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc-watch --onSuccess \"node --require source-map-support/register --inspect build/main.js\"",
+    "package": "tar --exclude ./frontend/node_modules -czvf project.tar.gz ./frontend",
     "test": "node build/main.js urls-basic.txt"
   },
   "author": "",
