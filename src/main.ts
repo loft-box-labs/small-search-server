@@ -22,6 +22,13 @@ app.use(function(req, res, next) {
 
 app.all("*", (req, res, next) => {
   console.log(req.method + " " + req.url);
+  if (!req.get("Origin")) return next();
+
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+  res.set("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+
+  if ("OPTIONS" == req.method) return res.send(200);
   next();
 });
 
