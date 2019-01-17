@@ -6,10 +6,6 @@ import * as fs from "fs";
 import fetch from "node-fetch";
 import { PrefixTree } from "./prefixSearch";
 
-const FETCH_ERROR_RATE = 0.2;
-const DELAY_MS = 8000;
-
-let urlId: number = 0;
 const browserPromise: Promise<puppeteer.Browser> = puppeteer.launch();
 
 const urls: {
@@ -91,13 +87,6 @@ export async function addOrSetUrl(
   title: string | undefined,
   description: string | undefined
 ) {
-  if (Math.random() <= FETCH_ERROR_RATE) {
-    return {
-      ok: false,
-      retryable: true
-    };
-  }
-
   if (url in urls) {
     const delay = Math.random() * 3000 + 1000;
     await sleep(delay);
@@ -146,8 +135,7 @@ export async function addOrSetUrl(
   } catch (e) {
     console.error(e);
     return {
-      ok: false,
-      retryable: false
+      ok: false
     };
   }
 
