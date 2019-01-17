@@ -1,7 +1,15 @@
 import * as fs from "fs";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { getUrls, addUrl, search, autocomplete, deleteUrl } from "./urls";
+import {
+  getUrls,
+  search,
+  autocomplete,
+  deleteUrl,
+  addOrSetUrl,
+  getUrlScreenshotPath,
+  doesScreenshotExist
+} from "./urls";
 
 var app = express();
 
@@ -36,6 +44,11 @@ app.get("/api/urls", function(req, res) {
   });
 });
 
+app.get("/api/screenshot", async function(req, res) {
+  const url = req.query.url;
+  res.sendFile(getUrlScreenshotPath(url));
+});
+
 app.delete("/api/urls", async function(req, res) {
   const url = req.query.url;
   await deleteUrl(url);
@@ -47,15 +60,16 @@ app.delete("/api/urls", async function(req, res) {
 
 app.post("/api/urls", async function(req, res) {
   const url = req.body.url;
+  const title = req.body.title;
+  const description = req.body.description;
+
   if (typeof url !== "string") {
     res.status(400).send("Url in wrong format");
     return;
   }
 
-  const success = await addUrl(url);
-  res.status(200).json({
-    success
-  });
+  const success = await addOrSetUrl(url, title, description);
+  res.status(200).json(success);
 });
 
 // start app ===============================================
