@@ -22,6 +22,11 @@ https://news.ycombinator.com
 
 */
 
+/*
+  when finished, run "npm run package" and then submit the package.tar
+  file it generates to https://www.dropbox.com/request/HuMwqYTORRlnxyslj1ca
+*/
+
 async function run() {
   await load();
 
