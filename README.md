@@ -15,5 +15,3 @@ Some useful details:
 * Adding or setting url details will return `{ ok: boolean, retryable: boolean }` -- if `ok` is `false` and `retryable` is `true`, the error is transient and you should retry
 
 * Screenshots can take time to capture, and may not be ready immediately
-
-* 
