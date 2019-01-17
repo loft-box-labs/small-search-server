@@ -15,6 +15,11 @@ var app = express();
 
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+app.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 app.all("*", (req, res, next) => {
   console.log(req.method + " " + req.url);
   next();
