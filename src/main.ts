@@ -78,6 +78,6 @@ app.post("/api/urls", async function(req, res) {
 });
 
 // start app ===============================================
-app.listen(3000, () => {
-  console.log("Express server listening on port %d.", 3000);
+app.listen(4000, () => {
+  console.log("Express server listening on port %d.", 4000);
 });
