@@ -1,0 +1,4 @@
+https://en.wikipedia.org/wiki/Red_panda
+https://en.wikipedia.org/wiki/Himalayas
+https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/
+https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/

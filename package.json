@@ -1,0 +1,23 @@
+{
+  "name": "vanta-practical-question",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "tsc -b -w",
+    "test": "node build/main.js urls-basic.txt"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cheerio": "^0.22.10",
+    "@types/lunr": "^2.3.0",
+    "@types/node": "^10.12.18",
+    "@types/node-fetch": "^2.1.4",
+    "cheerio": "^1.0.0-rc.2",
+    "lunr": "^2.3.5",
+    "node-fetch": "^2.3.0",
+    "promise-throttle": "^1.0.0",
+    "typescript": "^3.2.2"
+  }
+}
